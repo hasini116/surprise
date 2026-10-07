@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surprise Admin Panel</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #172554, #312e81, #581c87);
+    color: white;
+    padding: 30px;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.header h1 {
+    font-size: 36px;
+    margin-bottom: 8px;
+}
+
+.header p {
+    color: #cbd5e1;
+}
+
+.card {
+    background: rgba(255,255,255,0.10);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 25px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-size: 15px;
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.event-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.event {
+    padding: 18px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.2);
+    cursor: pointer;
+    text-align: center;
+    transition: 0.2s;
+}
+
+.event:hover {
+    background: rgba(255,255,255,0.20);
+}
+
+.event.active {
+    background: #2563eb;
+    border-color: #60a5fa;
+}
+
+.templates {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.template {
+    padding: 25px;
+    border-radius: 15px;
+    background: rgba(255,255,255,0.08);
+    border: 2px solid transparent;
+    cursor: pointer;
+}
+
+.template.active {
+    border-color: #60a5fa;
+    background: rgba(37,99,235,0.3);
+}
+
+.template h3 {
+    margin-top: 0;
+}
+
+button {
+    border: none;
+    padding: 14px 24px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.primary {
+    background: #2563eb;
+    color: white;
+}
+
+.primary:hover {
+    background: #1d4ed8;
+}
+
+.secondary {
+    background: white;
+    color: #172554;
+}
+
+.preview {
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 15px;
+    background: white;
+    color: #111827;
+}
+
+.hidden {
+    display: none;
+}
+
+.required {
+    color: #fca5a5;
+}
+
+@media(max-width:700px) {
+    .event-grid,
+    .templates {
+        grid-template-columns: 1fr;
+    }
+
+    body {
+        padding: 15px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>Surprise Creator</h1>
+        <p>Create a beautiful surprise for someone special</p>
+    </div>
+
+    <!-- BASIC DETAILS -->
+    <div class="card">
+
+        <h2>1. Basic Details</h2>
+
+        <label>
+            Name <span class="required">*</span>
+        </label>
+
+        <input
+            type="text"
+            id="personName"
+            placeholder="Enter person's name"
+            required
+        >
+
+        <label>
+            Choose Event <span class="required">*</span>
+        </label>
+
+        <div class="event-grid">
+
+            <div class="event active" onclick="selectEvent(this,'birthday')">
+                🎂 Birthday
+            </div>
+
+            <div class="event" onclick="selectEvent(this,'graduation')">
+                🎓 Graduation
+            </div>
+
+            <div class="event" onclick="selectEvent(this,'wedding')">
+                💍 Wedding
+            </div>
+
+            <div class="event" onclick="selectEvent(this,'engagement')">
+                💎 Engagement
+            </div>
+
+            <div class="event" onclick="selectEvent(this,'anniversary')">
+                🥂 Anniversary
+            </div>
+
+            <div class="event" onclick="selectEvent(this,'other')">
+                ✨ Other
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- TEMPLATE -->
+    <div class="card">
+
+        <h2>2. Choose Template</h2>
+
+        <div
+    class="templates"
+    id="templateContainer">
+</div>
+
+
+    <!-- MESSAGE -->
+    <div class="card">
+
+        <h2>3. Wishes</h2>
+
+        <label>Your Main Message</label>
+
+        <textarea
+            id="mainMessage"
+            placeholder="Write your beautiful message..."
+        ></textarea>
+
+        <label>Secret Message</label>
+
+        <textarea
+            id="secretMessage"
+            placeholder="Write a secret message..."
+        ></textarea>
+
+    </div>
+
+
+    <!-- MEDIA -->
+    <div class="card">
+
+        <h2>4. Photos & Video</h2>
+
+        <label>
+            Photos <span class="required">*</span>
+        </label>
+
+        <input
+            type="file"
+            id="photos"
+            accept="image/*"
+            multiple
+            required
+        >
+
+        <label>Video (Optional)</label>
+
+        <input
+            type="file"
+            id="video"
+            accept="video/*"
+        >
+
+        <label>Music (Optional)</label>
+
+        <input
+            type="file"
+            id="music"
+            accept="audio/*"
+        >
+
+    </div>
+
+
+    <!-- APPEARANCE -->
+    <div class="card">
+
+        <h2>5. Appearance</h2>
+
+        <label>Background Color</label>
+
+        <input
+            type="color"
+            id="backgroundColor"
+            value="#172554"
+        >
+
+        <p>
+            The recipient will see the background color you select.
+        </p>
+
+    </div>
+
+
+    <!-- PREVIEW -->
+    <div class="card">
+
+        <h2>6. Preview</h2>
+
+        <button
+            class="secondary"
+            onclick="showPreview()"
+        >
+            Preview Surprise
+        </button>
+
+        <div
+            id="preview"
+            class="preview hidden"
+        ></div>
+
+    </div>
+
+
+    <!-- CREATE -->
+    <div class="card">
+
+        <h2>7. Create Surprise</h2>
+
+        <p>
+            After creating the surprise, you can share the generated page.
+        </p>
+
+        <button
+            class="primary"
+            onclick="createSurprise()"
+        >
+            Create Surprise
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+let selectedEvent = "birthday";
+let selectedTemplate = "template1";
+
+const eventTemplates = {
+
+    birthday: [
+        ["Birthday Classic", "🎂", "Warm and joyful birthday design"],
+        ["Birthday Memories", "📸", "Beautiful photo memories"],
+        ["Birthday Celebration", "🎉", "Fun celebration style"],
+        ["Birthday Elegant", "✨", "Elegant birthday experience"]
+    ],
+
+    graduation: [
+        ["Graduation Classic", "🎓", "A proud graduation celebration"],
+        ["Graduation Memories", "📸", "Memories of the journey"],
+        ["Graduation Success", "🏆", "Celebrate the achievement"],
+        ["Graduation Elegant", "✨", "Elegant graduation design"]
+    ],
+
+    wedding: [
+        ["Wedding Classic", "💍", "Elegant wedding celebration"],
+        ["Wedding Memories", "📸", "Beautiful wedding memories"],
+        ["Wedding Love", "💕", "A romantic wedding experience"],
+        ["Wedding Elegant", "✨", "Premium wedding design"]
+    ],
+
+    engagement: [
+        ["Engagement Classic", "💎", "Celebrate your engagement"],
+        ["Engagement Memories", "📸", "Special moments together"],
+        ["Engagement Love", "💕", "A romantic engagement design"],
+        ["Engagement Elegant", "✨", "Elegant engagement experience"]
+    ],
+
+    anniversary: [
+        ["Anniversary Classic", "🥂", "Celebrate another beautiful year"],
+        ["Anniversary Memories", "📸", "Your special memories"],
+        ["Anniversary Love", "❤️", "A romantic anniversary"],
+        ["Anniversary Elegant", "✨", "Elegant anniversary design"]
+    ],
+
+    other: [
+        ["Classic Surprise", "🎁", "A beautiful surprise"],
+        ["Memories", "📸", "A memory-filled experience"],
+        ["Celebration", "🎉", "A joyful celebration"],
+        ["Elegant", "✨", "A premium elegant design"]
+    ]
+
+};
+
+
+// EVENT SELECT
+function selectEvent(element, eventName) {
+
+    // Remove active from all events
+    document.querySelectorAll(".event").forEach(function(event) {
+        event.classList.remove("active");
+    });
+
+    // Add active to clicked event
+    element.classList.add("active");
+
+    // Save selected event
+    selectedEvent = eventName;
+
+    // Load correct templates
+    loadTemplates(eventName);
+}
+
+
+// TEMPLATE SELECT
+function selectTemplate(element, templateName) {
+
+    document.querySelectorAll(".template").forEach(function(template) {
+        template.classList.remove("active");
+    });
+
+    element.classList.add("active");
+
+    selectedTemplate = templateName;
+
+    console.log("Selected Template:", selectedTemplate);
+}
+
+
+// LOAD TEMPLATES
+function loadTemplates(eventName) {
+
+    const container = document.getElementById("templateContainer");
+
+    if (!container) {
+        console.error("templateContainer not found!");
+        return;
+    }
+
+    const templates = eventTemplates[eventName];
+
+    if (!templates) {
+        console.error("No templates found for:", eventName);
+        return;
+    }
+
+    // Clear old templates
+    container.innerHTML = "";
+
+    // Create new templates
+    templates.forEach(function(template, index) {
+
+        const div = document.createElement("div");
+
+        div.className = "template";
+
+        if (index === 0) {
+            div.classList.add("active");
+        }
+
+        div.innerHTML = `
+            <div style="font-size:35px">
+                ${template[1]}
+            </div>
+
+            <h3>${template[0]}</h3>
+
+            <p>${template[2]}</p>
+        `;
+
+        div.addEventListener("click", function() {
+
+            selectTemplate(
+                div,
+                "template" + (index + 1)
+            );
+
+        });
+
+        container.appendChild(div);
+
+    });
+
+    // First template selected by default
+    selectedTemplate = "template1";
+
+    console.log("Event:", eventName);
+    console.log("Templates loaded:", templates);
+}
+
+
+// PREVIEW
+function showPreview() {
+
+    const name =
+        document.getElementById("personName").value;
+
+    const message =
+        document.getElementById("mainMessage").value;
+
+    const preview =
+        document.getElementById("preview");
+
+    if (!name) {
+
+        alert("Please enter the person's name.");
+
+        return;
+    }
+
+    preview.classList.remove("hidden");
+
+    preview.innerHTML = `
+
+        <h2>Preview</h2>
+
+        <h3>Hello ${name} 👋</h3>
+
+        <p>
+            ${message || "Your beautiful message will appear here."}
+        </p>
+
+        <p>
+            Event:
+            <strong>${selectedEvent}</strong>
+        </p>
+
+        <p>
+            Template:
+            <strong>${selectedTemplate}</strong>
+        </p>
+
+    `;
+}
+// CREATE SURPRISE
+function createSurprise() {
+
+    const nameInput =
+        document.getElementById("personName");
+
+    const mainMessage =
+        document.getElementById("mainMessage");
+
+    const secretMessage =
+        document.getElementById("secretMessage");
+
+    const photosInput =
+        document.getElementById("photos");
+
+
+    if (!nameInput) {
+        alert("Person name input not found!");
+        return;
+    }
+
+
+    const name =
+        nameInput.value.trim();
+
+
+    if (!name) {
+        alert("Please enter the person's name.");
+        nameInput.focus();
+        return;
+    }
+
+
+    // SAVE BASIC DETAILS
+    localStorage.setItem(
+        "surpriseName",
+        name
+    );
+
+    localStorage.setItem(
+        "surpriseEvent",
+        selectedEvent
+    );
+
+    localStorage.setItem(
+        "surpriseTemplate",
+        selectedTemplate
+    );
+
+
+    // SAVE MESSAGE
+    localStorage.setItem(
+        "surpriseMainMessage",
+        mainMessage ? mainMessage.value : ""
+    );
+
+
+    // SAVE SECRET MESSAGE
+    localStorage.setItem(
+        "surpriseSecretMessage",
+        secretMessage ? secretMessage.value : ""
+    );
+
+
+    // SAVE PHOTO NAMES
+    if (
+        photosInput &&
+        photosInput.files.length > 0
+    ) {
+
+        const photoNames = [];
+
+        for (
+            let i = 0;
+            i < photosInput.files.length;
+            i++
+        ) {
+
+            photoNames.push(
+                photosInput.files[i].name
+            );
+
+        }
+
+        localStorage.setItem(
+            "surprisePhotos",
+            JSON.stringify(photoNames)
+        );
+    }
+
+
+    console.log(
+        "Name:",
+        name
+    );
+
+    console.log(
+        "Event:",
+        selectedEvent
+    );
+
+    console.log(
+        "Template:",
+        selectedTemplate
+    );
+
+
+    // OPEN SURPRISE PAGE
+    window.location.href =
+        "surprise.html";
+}
+</script>
+
+</body>
+</html>

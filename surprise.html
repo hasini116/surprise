@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Surprise 🎉</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            color: white;
+            text-align: center;
+            padding: 30px;
+
+            background: linear-gradient(
+                135deg,
+                #171f55,
+                #6b3fa0
+            );
+        }
+
+        .surprise {
+            width: 90%;
+            max-width: 760px;
+            padding: 50px 30px;
+            background: rgba(255,255,255,0.12);
+            border-radius: 25px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            backdrop-filter: blur(15px);
+        }
+
+        h1 {
+            font-size: 42px;
+            margin-bottom: 20px;
+        }
+
+        .message {
+            font-size: 24px;
+            margin: 20px 0;
+        }
+
+        .event-name {
+            font-size: 18px;
+            opacity: 0.85;
+            margin-top: 20px;
+        }
+
+        .template-name {
+            font-size: 16px;
+            opacity: 0.7;
+            margin-top: 10px;
+        }
+
+        .secret {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255,255,255,0.12);
+            border-radius: 15px;
+        }
+
+        .back {
+            margin-top: 30px;
+            padding: 12px 22px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            background: white;
+            color: #172554;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="surprise">
+
+    <h1 id="title">🎉 Surprise 🎉</h1>
+
+    <div class="message" id="message"></div>
+
+    <div class="event-name" id="eventName"></div>
+
+    <div class="template-name" id="templateName"></div>
+
+    <div id="secretBox" class="secret" style="display:none;">
+        <h3>💌 Secret Message</h3>
+        <p id="secret"></p>
+    </div>
+
+    <button class="back" onclick="window.location.href='admin.html'">
+        ← Back
+    </button>
+
+</div>
+
+
+<script>
+
+    // GET DATA FROM ADMIN PANEL
+    const name =
+        localStorage.getItem("surpriseName") ||
+        "Someone Special";
+
+    const event =
+        localStorage.getItem("surpriseEvent") ||
+        "birthday";
+
+    const template =
+        localStorage.getItem("surpriseTemplate") ||
+        "template1";
+
+    const message =
+        localStorage.getItem("surpriseMainMessage") ||
+        "";
+
+    const secret =
+        localStorage.getItem("surpriseSecretMessage") ||
+        "";
+
+
+    // EVENT DETAILS
+    const eventData = {
+
+        birthday: {
+            title: "🎂 Happy Birthday!",
+            defaultMessage: "Happy Birthday! 🎂",
+            emoji: "🎂"
+        },
+
+        graduation: {
+            title: "🎓 Congratulations!",
+            defaultMessage: "Congratulations on your Graduation! 🎓",
+            emoji: "🎓"
+        },
+
+        wedding: {
+            title: "💍 Happy Wedding!",
+            defaultMessage: "Wishing you both a beautiful married life! 💍",
+            emoji: "💍"
+        },
+
+        engagement: {
+            title: "💎 Happy Engagement!",
+            defaultMessage: "Congratulations on your Engagement! 💎",
+            emoji: "💎"
+        },
+
+        anniversary: {
+            title: "🥂 Happy Anniversary!",
+            defaultMessage: "Happy Anniversary! ❤️",
+            emoji: "🥂"
+        },
+
+        other: {
+            title: "✨ Special Surprise!",
+            defaultMessage: "A beautiful surprise just for you! ✨",
+            emoji: "✨"
+        }
+
+    };
+
+
+    const currentEvent =
+        eventData[event] || eventData.other;
+
+
+    // TITLE
+    document.getElementById("title").textContent =
+        `${currentEvent.title} ${name} 🎉`;
+
+
+    // MESSAGE
+    document.getElementById("message").textContent =
+        message || currentEvent.defaultMessage;
+
+
+    // EVENT
+    document.getElementById("eventName").textContent =
+        `Event: ${event}`;
+
+
+    // TEMPLATE
+    document.getElementById("templateName").textContent =
+        `Template: ${template}`;
+
+
+    // SECRET MESSAGE
+    if (secret) {
+
+        document.getElementById("secret").textContent =
+            secret;
+
+        document.getElementById("secretBox").style.display =
+            "block";
+    }
+
+</script>
+
+</body>
+</html>
